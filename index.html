@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PDF Viewer</title>
 
@@ -11,12 +11,38 @@
       padding: 0;
       height: 100%;
       background: #000;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     }
 
-    iframe {
+    /* حاوية العرض */
+    .viewer {
+      position: fixed;
+      inset: 0;
+    }
+
+    /* نحاول نعرض PDF */
+    iframe, embed {
       width: 100%;
       height: 100%;
       border: none;
+      display: block;
+      background: #000;
+    }
+
+    /* طبقة تحميل خفيفة (تختفي تلقائيًا) */
+    .hint {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: rgba(255,255,255,0.85);
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.08), rgba(0,0,0,0.85));
+      padding: 24px;
+      z-index: 10;
+      pointer-events: none;
     }
 
     /* زر التحميل الفاخر */
@@ -38,7 +64,6 @@
 
       color: #fff;
       text-decoration: none;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial;
       font-size: 15px;
       font-weight: 600;
       letter-spacing: 0.2px;
@@ -47,8 +72,8 @@
         0 10px 25px rgba(0,0,0,0.35),
         inset 0 0 0 1px rgba(255,255,255,0.15);
 
-      transition: all 0.25s ease;
-      z-index: 999;
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      z-index: 9999;
     }
 
     .download-btn:hover{
@@ -68,55 +93,49 @@
       line-height: 1;
     }
 
-    /* رسالة للجوال */
-    .mobile-note{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:#000;
-      color:#fff;
-      font-family:Arial, sans-serif;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:24px;
-      z-index: 998;
+    /* على الجوال نخلي الزر أكبر شوي */
+    @media (max-width: 768px){
+      .download-btn{
+        bottom: 16px;
+        left: 16px;
+        padding: 13px 18px;
+        font-size: 15px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="viewer">
+    <!-- جرّب embed (أحيانًا أفضل للجوال) -->
+    <embed src="offer.pdf" type="application/pdf" />
 
-  <!-- عرض PDF على الكمبيوتر -->
-  <iframe id="pdfFrame" src="offer.pdf"></iframe>
+    <!-- fallback: لو embed ما اشتغل، iframe ممكن يساعد لبعض الأجهزة -->
+    <iframe src="offer.pdf" title="PDF"></iframe>
+  </div>
 
-  <!-- زر تحميل -->
+  <!-- تلميح بسيط (يختفي بعد ثانيتين) -->
+  <div class="hint" id="hint">
+    جاري تحميل الملف…
+    <br><br>
+    إذا ما ظهر العرض داخل الصفحة على الجوال، استخدم زر التحميل أسفل اليسار.
+  </div>
+
+  <!-- زر تحميل ثابت دائمًا -->
   <a class="download-btn" href="offer.pdf" download>
     <span>⬇</span>
     تحميل الملف
   </a>
 
-  <!-- رسالة للجوال -->
-  <div class="mobile-note" id="mobileNote">
-    جاري فتح الملف…
-    <br><br>
-    إذا ما فتح تلقائيًا، استخدم زر التحميل.
-  </div>
-
   <script>
-    const pdfUrl = "offer.pdf";
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      document.getElementById("pdfFrame").style.display = "none";
-      document.getElementById("mobileNote").style.display = "flex";
-
-      // فتح PDF تلقائيًا على الجوال
-      window.location.replace(pdfUrl);
-    }
+    // نخفي التلميح بعد وقت قصير عشان الصفحة تصير نظيفة
+    setTimeout(() => {
+      const h = document.getElementById("hint");
+      if (h) h.style.display = "none";
+    }, 2000);
   </script>
-
 </body>
 </html>
+
 
 
