@@ -1,107 +1,75 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>عرض الملف</title>
-
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      color: #fff;
+    html, body{
+      margin:0; padding:0; height:100%;
+      background:#000; color:#fff;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     }
-
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      box-sizing:border-box;
     }
-
-    .card {
-      background: rgba(20,20,20,0.85);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 22px;
-      padding: 26px;
-      max-width: 520px;
-      width: 90%;
-      box-shadow: 0 25px 70px rgba(0,0,0,0.6);
+    .card{
+      width:min(560px,100%);
+      background:rgba(20,20,20,0.85);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:22px;
+      padding:24px;
+      box-shadow:0 25px 70px rgba(0,0,0,0.65);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      text-align: center;
+      text-align:center;
     }
+    h1{margin:0 0 10px; font-size:22px; font-weight:800;}
+    p{margin:0 0 18px; color:rgba(255,255,255,0.7); line-height:1.7; font-size:14px;}
 
-    h1 {
-      margin: 0 0 10px 0;
-      font-size: 22px;
-      font-weight: 700;
+    .btns{display:flex; gap:12px; flex-wrap:wrap; justify-content:center;}
+    .btn{
+      flex:1 1 180px;
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      padding:14px 16px;
+      border-radius:18px;
+      text-decoration:none;
+      color:#fff;
+      font-weight:800;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.22);
+      box-shadow:0 14px 40px rgba(0,0,0,0.55);
+      -webkit-tap-highlight-color:transparent;
     }
-
-    p {
-      margin: 0 0 22px 0;
-      font-size: 15px;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.6;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-
-      padding: 16px 18px;
-      border-radius: 18px;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 700;
-
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff;
-
-      box-shadow:
-        0 15px 40px rgba(0,0,0,0.55),
-        inset 0 0 0 1px rgba(255,255,255,0.08);
-
-      transition: transform 0.15s ease, box-shadow 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 20px 55px rgba(0,0,0,0.7),
-        inset 0 0 0 1px rgba(255,255,255,0.15);
-    }
-
-    .icon {
-      font-size: 20px;
-      line-height: 1;
-    }
+    .btn:active{transform:scale(0.98);}
+    .ico{font-size:18px; line-height:1;}
   </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="card">
+      <h1>عرض الملف</h1>
+      <p>افتح الملف أو حمّله. الصفحة تبقى سوداء والزر ما يختفي.</p>
 
-  <div class="card">
-    <h1>عرض الملف</h1>
-    <p>
-      اضغط على الزر لفتح الملف في تبويب جديد.<br>
-      الصفحة ستبقى سوداء والزر لن يختفي.
-    </p>
+      <div class="btns">
+        <a class="btn" href="offer.pdf" target="_blank" rel="noopener">
+          <span class="ico">📄</span> فتح الملف
+        </a>
 
-    <!-- فتح في تبويب جديد -->
-    <a class="btn" href="offer.pdf" target="_blank" rel="noopener">
-      <span class="icon">📄</span>
-      فتح الملف
-    </a>
+        <a class="btn" href="offer.pdf" download>
+          <span class="ico">⬇</span> تحميل الملف
+        </a>
+      </div>
+    </div>
   </div>
-
 </body>
 </html>
+
 
 
 
