@@ -104,12 +104,11 @@
       line-height: 1;
     }
 
-    /* details مخفي افتراضيًا */
+    /* خيار عرض داخل الصفحة للكمبيوتر فقط (اختياري) */
     details{
       margin-top: 14px;
       border-top: 1px solid rgba(255,255,255,0.10);
       padding-top: 14px;
-      display:none;
     }
     summary{
       cursor:pointer;
@@ -144,26 +143,26 @@
     <div class="card">
       <h1 class="title">عرض الملف</h1>
       <p class="sub">
-        افتح الملف داخل الصفحة على الكمبيوتر، والتحميل للجوال.
+        افتح الملف مباشرة أو حمّله. (هذه الصفحة سريعة جدًا على الجوال لأننا لا نحمل الـ PDF تلقائيًا.)
       </p>
 
       <div class="btns">
-        <!-- فتح: الآن ما يطلعك لملف PDF -->
-        <a class="btn primary" href="#viewer" id="openBtn">
+        <!-- فتح: يفتح الـ PDF في نفس التبويب -->
+        <a class="btn primary" href="offer.pdf">
           <span class="icon">📄</span>
           فتح الملف
         </a>
 
-        <!-- تحميل -->
+        <!-- تحميل: يجبر التحميل غالبًا (حسب المتصفح) -->
         <a class="btn" href="offer.pdf" download>
           <span class="icon">⬇️</span>
           تحميل الملف
         </a>
       </div>
 
-      <!-- عرض داخل الصفحة -->
-      <details id="viewer">
-        <summary>إخفاء / إظهار العرض</summary>
+      <!-- اختياري للكمبيوتر: عرض داخل الصفحة عند الطلب فقط -->
+      <details>
+        <summary>عرض داخل الصفحة (للكمبيوتر فقط – قد لا يعمل على بعض الجوالات)</summary>
         <div class="viewer">
           <iframe loading="lazy" src="offer.pdf"></iframe>
         </div>
@@ -171,29 +170,9 @@
 
     </div>
   </div>
-
-  <script>
-    // على الكمبيوتر: زر "فتح الملف" يفتح العارض داخل الصفحة بدل الانتقال للـ PDF
-    const openBtn = document.getElementById("openBtn");
-    const viewer = document.getElementById("viewer");
-
-    // أظهر قسم العرض فقط على الشاشات الكبيرة (كمبيوتر)
-    function isDesktop() {
-      return window.matchMedia("(min-width: 900px)").matches;
-    }
-
-    openBtn.addEventListener("click", (e) => {
-      if (isDesktop()) {
-        e.preventDefault();     // لا تروح لملف PDF
-        viewer.style.display = "block";
-        viewer.open = true;     // افتح details
-        viewer.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-      // على الجوال: خله طبيعي (ما يفتح PDF داخل الصفحة عشان السرعة)
-    });
-  </script>
 </body>
 </html>
+
 
 
 
