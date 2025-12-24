@@ -1,96 +1,142 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>العرض</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Viewer</title>
 
   <style>
-    html,body{
-      margin:0;
-      height:100%;
-      background:#0b0b0b;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial;
-      color:#fff;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     }
 
-    body{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      box-sizing:border-box;
+    /* حاوية العرض */
+    .viewer {
+      position: fixed;
+      inset: 0;
     }
 
-    .card{
-      width:100%;
-      max-width:420px;
-      background:#111;
-      border:1px solid rgba(255,255,255,0.15);
-      border-radius:22px;
-      padding:28px 24px;
-      text-align:center;
-      box-shadow:0 30px 80px rgba(0,0,0,0.7);
+    /* نحاول نعرض PDF */
+    iframe, embed {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #000;
     }
 
-    h1{
-      margin:0 0 10px;
-      font-size:22px;
-      font-weight:800;
+    /* طبقة تحميل خفيفة (تختفي تلقائيًا) */
+    .hint {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: rgba(255,255,255,0.85);
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.08), rgba(0,0,0,0.85));
+      padding: 24px;
+      z-index: 10;
+      pointer-events: none;
     }
 
-    p{
-      margin:0 0 22px;
-      font-size:14px;
-      color:rgba(255,255,255,0.65);
-      line-height:1.7;
+    /* زر التحميل الفاخر */
+    .download-btn{
+      position: fixed;
+      bottom: 18px;
+      left: 18px;
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      padding: 12px 18px;
+      border-radius: 14px;
+
+      background: rgba(20,20,20,0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+
+      box-shadow:
+        0 10px 25px rgba(0,0,0,0.35),
+        inset 0 0 0 1px rgba(255,255,255,0.15);
+
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      z-index: 9999;
     }
 
-    a{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      width:100%;
-      padding:15px 18px;
-      margin-bottom:12px;
-      border-radius:16px;
-      text-decoration:none;
-      font-size:16px;
-      font-weight:700;
-      color:#fff;
-      background:rgba(255,255,255,0.08);
-      border:1px solid rgba(255,255,255,0.25);
-      box-shadow:0 18px 45px rgba(0,0,0,0.55);
-      -webkit-tap-highlight-color:transparent;
+    .download-btn:hover{
+      transform: translateY(-2px);
+      background: rgba(30,30,30,0.85);
+      box-shadow:
+        0 14px 35px rgba(0,0,0,0.45),
+        inset 0 0 0 1px rgba(255,255,255,0.25);
     }
 
-    a.primary{
-      background:rgba(255,255,255,0.12);
-      border:1px solid rgba(255,255,255,0.35);
+    .download-btn:active{
+      transform: translateY(0);
     }
 
-    a:last-child{ margin-bottom:0; }
+    .download-btn span{
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* على الجوال نخلي الزر أكبر شوي */
+    @media (max-width: 768px){
+      .download-btn{
+        bottom: 16px;
+        left: 16px;
+        padding: 13px 18px;
+        font-size: 15px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <h1>العرض</h1>
-    <p>اختر فتح العرض مباشرة أو تحميله</p>
+  <div class="viewer">
+    <!-- جرّب embed (أحيانًا أفضل للجوال) -->
+    <embed src="offer.pdf" type="application/pdf" />
 
-    <!-- فتح العرض -->
-    <a class="primary" href="offer.pdf" target="_blank" rel="noopener">
-      📄 فتح العرض
-    </a>
-
-    <!-- تحميل العرض -->
-    <a href="offer.pdf" download>
-      ⬇ تحميل العرض
-    </a>
+    <!-- fallback: لو embed ما اشتغل، iframe ممكن يساعد لبعض الأجهزة -->
+    <iframe src="offer.pdf" title="PDF"></iframe>
   </div>
+
+  <!-- تلميح بسيط (يختفي بعد ثانيتين) -->
+  <div class="hint" id="hint">
+    جاري تحميل الملف…
+    <br><br>
+    إذا ما ظهر العرض داخل الصفحة على الجوال، استخدم زر التحميل أسفل اليسار.
+  </div>
+
+  <!-- زر تحميل ثابت دائمًا -->
+  <a class="download-btn" href="offer.pdf" download>
+    <span>⬇</span>
+    تحميل الملف
+  </a>
+
+  <script>
+    // نخفي التلميح بعد وقت قصير عشان الصفحة تصير نظيفة
+    setTimeout(() => {
+      const h = document.getElementById("hint");
+      if (h) h.style.display = "none";
+    }, 2000);
+  </script>
 </body>
 </html>
+
 
 
 
