@@ -46,6 +46,7 @@
       font-size: 20px;
       font-weight: 700;
       margin: 0 0 8px 0;
+      letter-spacing: 0.2px;
     }
 
     .sub{
@@ -67,17 +68,23 @@
       align-items:center;
       justify-content:center;
       gap:10px;
+
       padding: 14px 16px;
       border-radius: 16px;
       text-decoration:none;
       font-weight: 700;
       font-size: 15px;
       color: #fff;
+
       background: rgba(35,35,35,0.85);
       border: 1px solid rgba(255,255,255,0.16);
       box-shadow: 0 12px 30px rgba(0,0,0,0.45);
-      cursor: pointer;
+      transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
+
+    .btn:hover{ transform: translateY(-1px); }
+    .btn:active{ transform: scale(0.98); }
 
     .btn.primary{
       background: rgba(255,255,255,0.10);
@@ -88,31 +95,46 @@
     }
 
     .icon{
+      width: 20px;
+      height: 20px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       font-size: 18px;
+      line-height: 1;
     }
 
-    /* عارض PDF */
-    .viewer{
+    /* details مخفي افتراضيًا */
+    details{
       margin-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      padding-top: 14px;
+      display:none;
+    }
+    summary{
+      cursor:pointer;
+      color: var(--muted);
+      font-size: 14px;
+      user-select:none;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+
+    .viewer{
+      margin-top: 12px;
       width: 100%;
       height: 70vh;
       border: 1px solid rgba(255,255,255,0.14);
       border-radius: 14px;
       overflow: hidden;
       background:#000;
-      display: none; /* مخفي افتراضيًا */
     }
-
     iframe{
       width:100%;
       height:100%;
       border:0;
+      display:block;
       background:#000;
-    }
-
-    @media (max-width: 900px){
-      /* على الجوال لا نعرض الـ viewer */
-      .viewer{ display:none !important; }
     }
   </style>
 </head>
@@ -122,16 +144,15 @@
     <div class="card">
       <h1 class="title">عرض الملف</h1>
       <p class="sub">
-        في الكمبيوتر: فتح داخل الصفحة.  
-        في الجوال: تحميل مباشر بدون بطء.
+        افتح الملف داخل الصفحة على الكمبيوتر، والتحميل للجوال.
       </p>
 
       <div class="btns">
-        <!-- فتح داخل الصفحة (كمبيوتر فقط) -->
-        <button class="btn primary" onclick="openPdf()">
+        <!-- فتح: الآن ما يطلعك لملف PDF -->
+        <a class="btn primary" href="#viewer" id="openBtn">
           <span class="icon">📄</span>
           فتح الملف
-        </button>
+        </a>
 
         <!-- تحميل -->
         <a class="btn" href="offer.pdf" download>
@@ -140,20 +161,40 @@
         </a>
       </div>
 
-      <!-- عارض PDF -->
-      <div class="viewer" id="pdfViewer">
-        <iframe src="offer.pdf"></iframe>
-      </div>
+      <!-- عرض داخل الصفحة -->
+      <details id="viewer">
+        <summary>إخفاء / إظهار العرض</summary>
+        <div class="viewer">
+          <iframe loading="lazy" src="offer.pdf"></iframe>
+        </div>
+      </details>
 
     </div>
   </div>
 
   <script>
-    function openPdf(){
-      // فتح العارض فقط على الشاشات الكبيرة
-      if (window.innerWidth > 900) {
-        document.getElementById("pdfViewer").style.display = "block";
-        document.getElementById
+    // على الكمبيوتر: زر "فتح الملف" يفتح العارض داخل الصفحة بدل الانتقال للـ PDF
+    const openBtn = document.getElementById("openBtn");
+    const viewer = document.getElementById("viewer");
+
+    // أظهر قسم العرض فقط على الشاشات الكبيرة (كمبيوتر)
+    function isDesktop() {
+      return window.matchMedia("(min-width: 900px)").matches;
+    }
+
+    openBtn.addEventListener("click", (e) => {
+      if (isDesktop()) {
+        e.preventDefault();     // لا تروح لملف PDF
+        viewer.style.display = "block";
+        viewer.open = true;     // افتح details
+        viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      // على الجوال: خله طبيعي (ما يفتح PDF داخل الصفحة عشان السرعة)
+    });
+  </script>
+</body>
+</html>
+
 
 
 
