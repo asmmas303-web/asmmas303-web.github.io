@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Viewer</title>
+  <style>
+    html, body { margin:0; padding:0; height:100%; background:#000; }
+    iframe { width:100%; height:100%; border:none; }
+    .download-btn{
+      position:fixed; bottom:15px; left:15px;
+      background:rgba(0,0,0,0.75); color:#fff;
+      padding:10px 14px; text-decoration:none;
+      border-radius:6px; font-size:14px;
+      font-family:Arial,sans-serif; z-index:999;
+    }
+    .download-btn:hover{ background:rgba(0,0,0,0.9); }
+  </style>
+</head>
+<body>
+  <iframe src="offer.pdf"></iframe>
+  <a class="download-btn" href="offer.pdf" download>⬇ تحميل PDF</a>
+</body>
+</html>
+
+
