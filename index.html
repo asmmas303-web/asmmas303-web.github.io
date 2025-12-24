@@ -3,120 +3,176 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PDF Viewer</title>
+  <title>عرض الملف</title>
 
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000; /* خلفية سوداء ثابتة */
+    :root{
+      --bg:#000;
+      --card: rgba(18,18,18,0.78);
+      --stroke: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+    }
+
+    html, body{
+      height:100%;
+      margin:0;
+      background: var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      overflow: hidden;
+      color: var(--text);
     }
 
-    /* عرض PDF (للكمبيوتر فقط) */
-    .desktop-viewer {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      box-sizing:border-box;
     }
 
-    /* شاشة الجوال البسيطة */
-    .mobile-screen {
-      display: none;
-      height: 100%;
-      background: #000;
-      color: #fff;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
+    .card{
+      width:min(520px, 100%);
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
-    .mobile-screen h2 {
-      font-weight: 600;
-      margin-bottom: 12px;
+    .title{
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.2px;
     }
 
-    .mobile-screen p {
-      opacity: 0.75;
-      font-size: 15px;
+    .sub{
+      margin: 0 0 18px 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
     }
 
-    /* زر التحميل الفاخر (فوق كل شيء) */
-    .download-btn{
-      position: fixed;
-      bottom: 18px;
-      left: 18px;
+    .btns{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
 
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .btn{
+      flex: 1 1 180px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
 
-      padding: 13px 20px;
+      padding: 14px 16px;
       border-radius: 16px;
-
-      background: rgba(20,20,20,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-
-      color: #fff;
-      text-decoration: none;
+      text-decoration:none;
+      font-weight: 700;
       font-size: 15px;
-      font-weight: 600;
+      color: #fff;
 
+      background: rgba(35,35,35,0.85);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      transition: transform .15s ease, background .2s ease, box-shadow .2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover{ transform: translateY(-1px); }
+    .btn:active{ transform: scale(0.98); }
+
+    .btn.primary{
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.22);
       box-shadow:
-        0 10px 30px rgba(0,0,0,0.5),
-        inset 0 0 0 1px rgba(255,255,255,0.18);
-
-      z-index: 99999; /* مهم جدًا عشان ما يختفي */
+        0 18px 40px rgba(0,0,0,0.55),
+        inset 0 0 0 1px rgba(255,255,255,0.10);
     }
 
-    .download-btn span {
+    .icon{
+      width: 20px;
+      height: 20px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       font-size: 18px;
+      line-height: 1;
     }
 
-    .download-btn:active {
-      transform: scale(0.97);
+    /* خيار عرض داخل الصفحة للكمبيوتر فقط (اختياري) */
+    details{
+      margin-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      padding-top: 14px;
     }
+    summary{
+      cursor:pointer;
+      color: var(--muted);
+      font-size: 14px;
+      user-select:none;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
 
-    /* استجابة للجوال */
-    @media (max-width: 900px) {
-      .desktop-viewer {
-        display: none; /* لا نحمل PDF بالجوال */
-      }
-      .mobile-screen {
-        display: flex;
-      }
+    .viewer{
+      margin-top: 12px;
+      width: 100%;
+      height: 70vh;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 14px;
+      overflow: hidden;
+      background:#000;
+    }
+    iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:#000;
     }
   </style>
 </head>
 
 <body>
-
-  <!-- كمبيوتر: عرض PDF -->
-  <iframe class="desktop-viewer" src="offer.pdf"></iframe>
-
-  <!-- جوال: شاشة سوداء خفيفة -->
-  <div class="mobile-screen">
-    <div>
-      <h2>عرض الملف</h2>
-      <p>
-        اضغط على زر التحميل لفتح الملف مباشرة.
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">عرض الملف</h1>
+      <p class="sub">
+        افتح الملف مباشرة أو حمّله. (هذه الصفحة سريعة جدًا على الجوال لأننا لا نحمل الـ PDF تلقائيًا.)
       </p>
+
+      <div class="btns">
+        <!-- فتح: يفتح الـ PDF في نفس التبويب -->
+        <a class="btn primary" href="offer.pdf">
+          <span class="icon">📄</span>
+          فتح الملف
+        </a>
+
+        <!-- تحميل: يجبر التحميل غالبًا (حسب المتصفح) -->
+        <a class="btn" href="offer.pdf" download>
+          <span class="icon">⬇️</span>
+          تحميل الملف
+        </a>
+      </div>
+
+      <!-- اختياري للكمبيوتر: عرض داخل الصفحة عند الطلب فقط -->
+      <details>
+        <summary>عرض داخل الصفحة (للكمبيوتر فقط – قد لا يعمل على بعض الجوالات)</summary>
+        <div class="viewer">
+          <iframe loading="lazy" src="offer.pdf"></iframe>
+        </div>
+      </details>
+
     </div>
   </div>
-
-  <!-- زر التحميل (يعمل دائمًا) -->
-  <a class="download-btn" href="offer.pdf">
-    <span>⬇</span>
-    فتح / تحميل الملف
-  </a>
-
 </body>
 </html>
+
 
 
 
