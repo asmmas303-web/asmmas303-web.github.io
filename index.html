@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -10,42 +10,42 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background: #000;
-      overflow: hidden;
+      background: #000; /* خلفية سوداء ثابتة */
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      overflow: hidden;
     }
 
-    /* حاوية العرض */
-    .viewer {
-      position: fixed;
-      inset: 0;
-    }
-
-    /* نحاول نعرض PDF */
-    iframe, embed {
+    /* عرض PDF (للكمبيوتر فقط) */
+    .desktop-viewer {
       width: 100%;
       height: 100%;
       border: none;
       display: block;
-      background: #000;
     }
 
-    /* طبقة تحميل خفيفة (تختفي تلقائيًا) */
-    .hint {
-      position: fixed;
-      inset: 0;
-      display: flex;
+    /* شاشة الجوال البسيطة */
+    .mobile-screen {
+      display: none;
+      height: 100%;
+      background: #000;
+      color: #fff;
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: rgba(255,255,255,0.85);
-      background: radial-gradient(ellipse at center, rgba(255,255,255,0.08), rgba(0,0,0,0.85));
       padding: 24px;
-      z-index: 10;
-      pointer-events: none;
     }
 
-    /* زر التحميل الفاخر */
+    .mobile-screen h2 {
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .mobile-screen p {
+      opacity: 0.75;
+      font-size: 15px;
+    }
+
+    /* زر التحميل الفاخر (فوق كل شيء) */
     .download-btn{
       position: fixed;
       bottom: 18px;
@@ -55,87 +55,69 @@
       align-items: center;
       gap: 10px;
 
-      padding: 12px 18px;
-      border-radius: 14px;
+      padding: 13px 20px;
+      border-radius: 16px;
 
-      background: rgba(20,20,20,0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(20,20,20,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
 
       color: #fff;
       text-decoration: none;
       font-size: 15px;
       font-weight: 600;
-      letter-spacing: 0.2px;
 
       box-shadow:
-        0 10px 25px rgba(0,0,0,0.35),
-        inset 0 0 0 1px rgba(255,255,255,0.15);
+        0 10px 30px rgba(0,0,0,0.5),
+        inset 0 0 0 1px rgba(255,255,255,0.18);
 
-      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-      z-index: 9999;
+      z-index: 99999; /* مهم جدًا عشان ما يختفي */
     }
 
-    .download-btn:hover{
-      transform: translateY(-2px);
-      background: rgba(30,30,30,0.85);
-      box-shadow:
-        0 14px 35px rgba(0,0,0,0.45),
-        inset 0 0 0 1px rgba(255,255,255,0.25);
-    }
-
-    .download-btn:active{
-      transform: translateY(0);
-    }
-
-    .download-btn span{
+    .download-btn span {
       font-size: 18px;
-      line-height: 1;
     }
 
-    /* على الجوال نخلي الزر أكبر شوي */
-    @media (max-width: 768px){
-      .download-btn{
-        bottom: 16px;
-        left: 16px;
-        padding: 13px 18px;
-        font-size: 15px;
+    .download-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* استجابة للجوال */
+    @media (max-width: 900px) {
+      .desktop-viewer {
+        display: none; /* لا نحمل PDF بالجوال */
+      }
+      .mobile-screen {
+        display: flex;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="viewer">
-    <!-- جرّب embed (أحيانًا أفضل للجوال) -->
-    <embed src="offer.pdf" type="application/pdf" />
 
-    <!-- fallback: لو embed ما اشتغل، iframe ممكن يساعد لبعض الأجهزة -->
-    <iframe src="offer.pdf" title="PDF"></iframe>
+  <!-- كمبيوتر: عرض PDF -->
+  <iframe class="desktop-viewer" src="offer.pdf"></iframe>
+
+  <!-- جوال: شاشة سوداء خفيفة -->
+  <div class="mobile-screen">
+    <div>
+      <h2>عرض الملف</h2>
+      <p>
+        اضغط على زر التحميل لفتح الملف مباشرة.
+      </p>
+    </div>
   </div>
 
-  <!-- تلميح بسيط (يختفي بعد ثانيتين) -->
-  <div class="hint" id="hint">
-    جاري تحميل الملف…
-    <br><br>
-    إذا ما ظهر العرض داخل الصفحة على الجوال، استخدم زر التحميل أسفل اليسار.
-  </div>
-
-  <!-- زر تحميل ثابت دائمًا -->
-  <a class="download-btn" href="offer.pdf" download>
+  <!-- زر التحميل (يعمل دائمًا) -->
+  <a class="download-btn" href="offer.pdf">
     <span>⬇</span>
-    تحميل الملف
+    فتح / تحميل الملف
   </a>
 
-  <script>
-    // نخفي التلميح بعد وقت قصير عشان الصفحة تصير نظيفة
-    setTimeout(() => {
-      const h = document.getElementById("hint");
-      if (h) h.style.display = "none";
-    }, 2000);
-  </script>
 </body>
 </html>
+
 
 
 
